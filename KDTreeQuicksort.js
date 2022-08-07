@@ -1,4 +1,4 @@
-// Returns the k-th smallest element of list within left..right inclusive (i.e. left <= k <= right).
+// Returns the k-th smallest element of list within left...right inclusive (i.e. left <= k <= right).
 function quickselect(array, hi, low, k) {
     let pivotIndex;
     while (low < hi) {
@@ -69,67 +69,24 @@ function partition(array, hi, low, pivotIdx, quickalgPair) {
     return storeIndexEq; // quickalgPair[1] is in the group of larger elements
 }
 
-//Done using a (mergesort) decision tree
 function medianAtmost5(array, hi, low) {
-    let Max2lowest, Min2lowest, Max2highest, Min2highest;
+    let i, j, temp;
     switch (hi - low) {
         case 5:
-        /*
-        InOrder1 = array[low + 1] >= array[low];
-        Max2lowest = (InOrder1 ? low + 1 : low);
-        Min2lowest = (InOrder1 ? low : low + 1);
-        InOrder2 = array[hi] >= array[hi - 1];
-        Max2highest = (InOrder2 ? hi : hi - 1);
-        Min2highest = (InOrder2 ? hi - 1 : hi);
-        return InOrder1 ? InOrder2 ? Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                   : Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                        : InOrder2 ? Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                   : Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi);
-        */
-        return InOrder1 ? InOrder2 ? Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                   : Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                        : InOrder2 ? Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                   : Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi);
         case 4:
-        /*
-        InOrder1 = array[low + 1] >= array[low];
-        Max2lowest = (InOrder1 ? low + 1 : low);
-        Min2lowest = (InOrder1 ? low : low + 1);
-        InOrder2 = array[hi] >= array[hi - 1];
-        Max2highest = (InOrder2 ? hi : hi - 1);
-        Min2highest = (InOrder2 ? hi - 1 : hi);
-        return InOrder1 ? InOrder2 ? Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                   : Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                        : InOrder2 ? Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                   : Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi);
-        */
-        return InOrder1 ? InOrder2 ? Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                   : Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                        : InOrder2 ? Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                   : Min2lowest >= Min2highest ? (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi)
-                                                               : (Max2lowest >= Min2highest ? Max2lowest >= Max2highest ? low : hi : Max2lowest >= Max2highest ? low : hi);
-        /*
-        InOrder = array[low + 1] >= array[low];
-        Max2lowest = (InOrder ? low + 1 : low);
-        Min2lowest = (InOrder ? low : low + 1);
-        return array[hi] >= Max2lowest ? Max2lowest : (array[hi] >= Min2lowest ? hi : Min2lowest);
-        */
-        case 3: const InOrder = array[low + 1] >= array[low]; Max2lowest = (InOrder ? low : low + 1); Min2lowest = (InOrder ? low + 1 : low); return array[hi] >= Max2lowest ? Max2lowest : (array[hi] >= Min2lowest ? hi : Min2lowest);
+        i = low + 1;
+        while (i <= hi) {
+            j = i;
+            while (j > low && array[j − 1] > array[j]) {
+                temp = array[j - 1];
+                array[j - 1] = array[j];
+                array[j] = temp;
+                j--;
+            }
+            i++;
+        }
+        return Math.floor((low + hi) / 2);
+        case 3: const InOrder = array[low + 1] >= array[low]; const Max2lowest = (InOrder ? low : low + 1), Min2lowest = (InOrder ? low + 1 : low); return array[hi] >= Max2lowest ? Max2lowest : (array[hi] >= Min2lowest ? hi : Min2lowest);
         case 2: return array[hi] >= array[low] ? low : hi;
         default: return low;
     }
@@ -138,10 +95,10 @@ function medianAtmost5(array, hi, low) {
 function quicksort(array, hi, low) {
     if (low >= hi || low < 0) {return;}
     // Sort point list and choose median as pivot element
-    let medianIndex = getpivot(array, hi, low, 0), node = new kdNode();
+    let medianIndex = getpivot(array, hi, low, 0);
     let quickpartition = partition(array, hi, low, medianIndex, [true]), left = quickpartition[0], right = quickpartition[1];
-    quicksort(array, low, quickpartition - 1);
-    quicksort(array, quickpartition + 1, hi);
+    quicksort(array, low, right - 1);
+    quicksort(array, left + 1, hi);
 }
 
 function kdnode(pointLst, hi, low) {
