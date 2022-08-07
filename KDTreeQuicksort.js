@@ -1,10 +1,11 @@
-function quickselect(array, hi, low, n) {
+// Returns the k-th smallest element of list within left..right inclusive (i.e. left <= k <= right).
+function quickselect(array, hi, low, k) {
     let pivotIndex;
     while (low < hi) {
         pivotIndex = getpivot(array, hi, low);
-        pivotIndex = partition(array, hi, low, pivotIndex, n);
-        if (pivotIndex == n) { return n; }
-        if (pivotIndex > n) { right = pivotIndex - 1; } else { left = pivotIndex + 1; }
+        pivotIndex = partition(array, hi, low, pivotIndex, [false, k]);
+        if (pivotIndex == k) { return k; }
+        if (pivotIndex > k) { right = pivotIndex - 1; } else { left = pivotIndex + 1; }
     }
     return low;
 }
@@ -31,8 +32,8 @@ function getpivot(array, hi, low, axis) {
     return quickselect(array, low, low + Math.floor((hi − low) / 5), mid);
 }
 
-function partition(array, hi, low, pivotIdx, n) {
-    let pivotValue = array[pivotIdx], temp, j, storeIndex;
+function partition(array, hi, low, pivotIdx, quickalgPair) {
+    let pivotValue = array[pivotIdx], temp, j, storeIndex, storeIndexEq;
     // Move pivot to end
     array[pivotIdx] = array[hi];
     array[hi] = pivotValue;
@@ -53,16 +54,19 @@ function partition(array, hi, low, pivotIdx, n) {
             temp = array[storeIndex];
             array[storeIndex] = array[j];
             array[j] = temp;
-            storeIndex++;
+            storeIndexEq++;
         }
     }
+    // Move the pivot to where it belongs
     temp = array[storeIndexEq];
     array[storeIndexEq] = array[j];
     array[j] = temp;
-    // Return location of pivot considering the desired location n
-    if (n < storeIndex) {return storeIndex;}  // n is in the group of smaller elements
-    if (n <= storeIndexEq) {return n;}  // n is in the group equal to pivot
-    return storeIndexEq; // n is in the group of larger elements
+    //Is this quicksort? If so, return the bouns of the partition
+    if (quickalgPair[0]) { return [storeIndex, storeIndexEq]; }
+    // If not, return location of pivot considering the desired location quickalgPair[1]
+    if (quickalgPair[1] < storeIndex) {return storeIndex;}  // quickalgPair[1] is in the group of smaller elements
+    if (quickalgPair[1] <= storeIndexEq) {return quickalgPair[1];}  // quickalgPair[1] is in the group equal to pivot
+    return storeIndexEq; // quickalgPair[1] is in the group of larger elements
 }
 
 //Done using a (mergesort) decision tree
@@ -135,8 +139,9 @@ function quicksort(array, hi, low) {
     if (low >= hi || low < 0) {return;}
     // Sort point list and choose median as pivot element
     let medianIndex = getpivot(array, hi, low, 0), node = new kdNode();
-    quicksort(shapeLst, low, medianIndex - 1);
-    quicksort(shapeLst, medianIndex + 1, hi);
+    let quickpartition = partition(array, hi, low, medianIndex, [true]), left = quickpartition[0], right = quickpartition[1];
+    quicksort(array, low, quickpartition - 1);
+    quicksort(array, quickpartition + 1, hi);
 }
 
 function kdnode(pointLst, hi, low) {
@@ -154,11 +159,12 @@ function constructkdtree(pointLst, hi, low, axis) {
     if (low >= hi || low < 0) {return;}
     // Sort point list and choose median as pivot element
     let medianIndex = getpivot(pointLst, hi, low, axis), node = new kdNode();
+    let quickpartition = partition(pointLst, hi, low, medianIndex, [true]), left = quickpartition[0], right = quickpartition[1];
     // Create node and construct subtree
-    node.shape = shapeLst[medianIndex];
-    node.left = kdtree(pointLst, low, medianIndex - 1, (axis + 1) % 3 + 1);
-    node.right = kdtree(pointLst, medianIndex + 1, hi, (axis + 1) % 3 + 1);
+    node.shape = pointLst[medianIndex];
+    node.left = kdtree(pointLst, low, left - 1, (axis + 1) % 3 + 1);
+    node.right = kdtree(pointLst, right + 1, hi, (axis + 1) % 3 + 1);
     return node;
 }
 
-var points = [{x : 10, y : 20, z : 3}, {x : -50, y : 35, z : -7}, {x : -24, y : 57, z : 20}], kdtree1 = constructkdtree(points, points.length, 0, 1);
+var points = [{x : 10, y : 20, z : 3}, {x : -50, y : 35, z : -7}, {x : -24, y : 57, z : 20}, {x : -15, y : 8, z : 17}], kdtree1 = constructkdtree(points, points.length, 0, 1);
