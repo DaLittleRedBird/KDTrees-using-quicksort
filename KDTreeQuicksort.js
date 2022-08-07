@@ -102,7 +102,7 @@ function quicksort(array, hi, low) {
 }
 
 function kdnode(shape) {
-    this.xView = x; this.yView = y; this.wView = w; this.hView = h;
+    this.xView = x; this.yView = y; this.yView = z; this.wView = l; this.wView = w; this.hView = h;
     this.left = null; this.right = null; this.shape = shape;
     this.intersects = function(rect) { return this.xView + this.wView >= rect.x && rect.x + rect.w >= this.xView && this.yView + this.hView >= rect.y && rect.y + rect.h >= this.yView; }
     //Find all 'shapes' that intersect a given range
@@ -128,12 +128,23 @@ function constructkdtree(pointLst, hi, low, axis) {
     return node;
 }
 
+function getdist(point) { return point.x * point.x + point.y * point.y + point.z * point.z; }
+
+function search(tree, point, pointLst, depth, nearestNghbor) {
+    let best = nearestNghbor, bestDist, curDist, axis, diff, close, away;
+    if (!tree) { return nearestNeighbor; }
+    bestDist = getdist(nearestNghbor); curDist = getdist(point);
+    if (!best || curDist < bestDist) { best = NNRecord(point=tree.value, distance=bestDist); }
+    axis = depth % 3; diff = point[axis] - tree.value[axis];
+    if (diff <= 0) { close = tree.left; away = tree.right; } else { close = tree.right; away = tree.left; }
+    best = search(close, point, pointLst, depth + 1, best);
+    if (diff * diff < best.distance) { best = search(away, point, pointLst, depth + 1, best); }
+    return best;
+}
+
 function findNearestNeighbor(point, pointLst) {
-    var tree = constructkdtree(points, points.length, 0, 1), nearestNghbor = null;
-    if () {}
-    ;
-    if () {}
-    if () {}
+    var tree = constructkdtree(points, points.length, 0, 1);
+    const nearestNghbor = search(tree, point, pointLst, 1, null);
     return nearestNghbor;
 }
 
