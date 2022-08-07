@@ -2,8 +2,8 @@
 function quickselect(array, hi, low, k) {
     let pivotIndex;
     while (low < hi) {
-        pivotIndex = getpivot(array, hi, low);
-        pivotIndex = partition(array, hi, low, pivotIndex, [false, k]);
+        pivotIndex = getpivot(array, hi, low, 0);
+        pivotIndex = partition(array, hi, low, pivotIndex, 0, [false, k]);
         if (pivotIndex == k) { return k; }
         if (pivotIndex > k) { right = pivotIndex - 1; } else { left = pivotIndex + 1; }
     }
@@ -32,7 +32,7 @@ function getpivot(array, hi, low, axis) {
     return quickselect(array, low, low + Math.floor((hi − low) / 5), mid);
 }
 
-function partition(array, hi, low, pivotIdx, quickalgPair) {
+function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
     let pivotValue = array[pivotIdx], temp, j, storeIndex, storeIndexEq;
     // Move pivot to end
     array[pivotIdx] = array[hi];
@@ -61,7 +61,7 @@ function partition(array, hi, low, pivotIdx, quickalgPair) {
     temp = array[storeIndexEq];
     array[storeIndexEq] = array[j];
     array[j] = temp;
-    //Is this quicksort? If so, return the bouns of the partition
+    //Is this quicksort? If so, return the bounds of the partition
     if (quickalgPair[0]) { return [storeIndex, storeIndexEq]; }
     // If not, return location of pivot considering the desired location quickalgPair[1]
     if (quickalgPair[1] < storeIndex) {return storeIndex;}  // quickalgPair[1] is in the group of smaller elements
@@ -96,18 +96,22 @@ function quicksort(array, hi, low) {
     if (low >= hi || low < 0) {return;}
     // Sort point list and choose median as pivot element
     let medianIndex = getpivot(array, hi, low, 0);
-    let quickpartition = partition(array, hi, low, medianIndex, [true]), left = quickpartition[0], right = quickpartition[1];
+    let quickpartition = partition(array, hi, low, medianIndex, 0, [true]), left = quickpartition[0], right = quickpartition[1];
     quicksort(array, low, right - 1);
     quicksort(array, left + 1, hi);
 }
 
-function kdnode(pointLst, hi, low) {
+function kdnode(shape) {
     this.xView = x; this.yView = y; this.wView = w; this.hView = h;
-    this.left = null; this.right = null; this.shape = null;
+    this.left = null; this.right = null; this.shape = shape;
     this.intersects = function(rect) { return this.xView + this.wView >= rect.x && rect.x + rect.w >= this.xView && this.yView + this.hView >= rect.y && rect.y + rect.h >= this.yView; }
+    //Find all 'shapes' that intersect a given range
     this.query = function(range, found) {
-        if (!found) {found = [];}
-        ;
+        if (!found) { found = []; }
+        if (range.intersects(this.shape)) { found.push(this.shape); }
+        if (this.left) { this.left.query(range, found); }
+        if (this.right) { this.right.query(range, found); }
+        return found;
     }
 }
 
@@ -115,13 +119,22 @@ function kdnode(pointLst, hi, low) {
 function constructkdtree(pointLst, hi, low, axis) {
     if (low >= hi || low < 0) {return;}
     // Sort point list and choose median as pivot element
-    let medianIndex = getpivot(pointLst, hi, low, axis), node = new kdNode();
-    let quickpartition = partition(pointLst, hi, low, medianIndex, [true]), left = quickpartition[0], right = quickpartition[1];
+    let medianIndex = getpivot(pointLst, hi, low, axis), node = new kdNode(pointLst[medianIndex]);
+    let quickpartition = partition(pointLst, hi, low, medianIndex, axis, [true]), left = quickpartition[0], right = quickpartition[1];
     // Create node and construct subtree
     node.shape = pointLst[medianIndex];
-    node.left = kdtree(pointLst, low, left - 1, (axis + 1) % 3 + 1);
-    node.right = kdtree(pointLst, right + 1, hi, (axis + 1) % 3 + 1);
+    node.left = constructkdtree(pointLst, low, left - 1, (axis + 1) % 3 + 1);
+    node.right = constructkdtree(pointLst, right + 1, hi, (axis + 1) % 3 + 1);
     return node;
 }
 
-var points = [{x : 10, y : 20, z : 3}, {x : -50, y : 35, z : -7}, {x : -24, y : 57, z : 20}, {x : -15, y : 8, z : 17}], kdtree1 = constructkdtree(points, points.length, 0, 1);
+function findNearestNeighbor(point, pointLst) {
+    var tree = constructkdtree(points, points.length, 0, 1), nearestNghbor = null;
+    if () {}
+    ;
+    if () {}
+    if () {}
+    return nearestNghbor;
+}
+
+var points = [{x : 10, y : 20, z : 3}, {x : -50, y : 35, z : -7}, {x : -24, y : 57, z : 20}, {x : -15, y : 8, z : 17}, {x : 9, y : 9, z : 9}], kdtree1 = constructkdtree(points, points.length, 0, 1);
