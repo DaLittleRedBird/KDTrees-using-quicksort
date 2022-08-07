@@ -134,7 +134,7 @@ function search(tree, point, pointLst, depth, nearestNghbor) {
     let best = nearestNghbor, bestDist, curDist, axis, diff, close, away;
     if (!tree) { return nearestNeighbor; }
     bestDist = getdist(nearestNghbor); curDist = getdist(point);
-    if (!best || curDist < bestDist) { best = NNRecord(point=tree.value, distance=bestDist); }
+    if (!best || curDist < bestDist) { best = point; }
     axis = depth % 3; diff = point[axis] - tree.value[axis];
     if (diff <= 0) { close = tree.left; away = tree.right; } else { close = tree.right; away = tree.left; }
     best = search(close, point, pointLst, depth + 1, best);
