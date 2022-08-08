@@ -6,10 +6,10 @@ function quickselect(array, hi, low, k) {
     while (low < hi) {
         pivotIndex = getpivot(array, hi, low, 0);
         pivotIndex = partition(array, hi, low, pivotIndex, 0, [false, k]);
-        if (pivotIndex == k) { return array[k]; }
+        if (pivotIndex == k) { return k; }
         if (pivotIndex > k) { right = pivotIndex - 1; } else { left = pivotIndex + 1; }
     }
-    return array[low];
+    return low;
 }
 
 function getpivot(array, hi, low) {
