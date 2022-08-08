@@ -55,19 +55,18 @@ function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
 }
 
 function medianAtmost5(array, hi, low, axis) {
-    let i, j, inOrder, Max2lowest, Min2lowest;
-    switch (hi - low) {
-        case 5:
-        for (i = low + 1; i <= hi; i++) {
-            inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].shape.x > array[j].shape.x : axis == 2 ? array[j - 1].shape.y > array[j].shape.y : array[j - 1].shape.z > array[j].shape.z;
-            for (j = i; j > low && inOrder; j--) {
-                swap(array, j - 1, j);
-                inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].shape.x > array[j].shape.x : axis == 2 ? array[j - 1].shape.y > array[j].shape.y : array[j - 1].shape.z > array[j].shape.z;
-            } 
-        }
-        return Math.floor((hi + low) / 2);
+	let i, j, inOrder, Max2lowest, Min2lowest;
+	for (i = low + 1; i <= hi; i++) {
+		inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].shape.x > array[j].shape.x : axis == 2 ? array[j - 1].shape.y > array[j].shape.y : array[j - 1].shape.z > array[j].shape.z;
+		for (j = i; j > low && inOrder; j--) {
+			swap(array, j - 1, j);
+			inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].shape.x > array[j].shape.x : axis == 2 ? array[j - 1].shape.y > array[j].shape.y : array[j - 1].shape.z > array[j].shape.z;
+        } 
+    }
+	return Math.floor((hi + low) / 2);
+    /*switch (hi - low) {
         case 4:
-        /*
+        / *
         4 elems : (low <= low + 1) -> (hi - 1 <= hi) -> (min(low, low + 1) <= min(hi - 1, hi)) -> (max(low, low + 1) <= max(hi - 1, hi)) -> (min(max(low, low + 1), max(hi - 1, hi)) <= max(min(low, low + 1), min(hi - 1, hi))) ~ (min(max(a, b), max(c, d)) <= max(min(a, b), min(c, d)))
         
         a b c d
@@ -88,7 +87,7 @@ function medianAtmost5(array, hi, low, axis) {
 							         : Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
 			                                                     : Min2lowest >= Min2highest ? Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
 							         : Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
-        */
+        * /
         return inOrder ? alsoInOrder ? Min2lowest >= Min2highest ? Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
                                                                  : Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
                                      : Min2lowest >= Min2highest ? Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
@@ -103,7 +102,7 @@ function medianAtmost5(array, hi, low, axis) {
         return array[hi] >= Max2lowest ? Max2lowest : (array[hi] >= Min2lowest ? hi : Min2lowest);
         case 2: return array[hi] >= array[low] ? low : hi;
         default: return low;
-    }
+    }*/
 }
 
 function quicksort(array, hi, low) {
@@ -150,25 +149,20 @@ function getdist(point) { return point.x * point.x + point.y * point.y + point.z
 
 //Unfinished
 function search(tree, point, pointLst, depth, nearestNghbor) {
-    let best = nearestNghbor, bestDist, curDist, axis, diff, close, away;
     if (!tree) { return nearestNeighbor; }
+    let best = nearestNghbor, bestDist = getdist(nearestNghbor), curDist = getdist(point), axis = (depth % 3) + 1, diff, close, away;
     
-    bestDist = getdist(nearestNghbor); curDist = getdist(point);
     if (!best || curDist < bestDist) { best = point; }
     
-    axis = depth % 3; diff = point[axis] - tree.value[axis];
-    
-    if (diff <= 0) { close = tree.left; away = tree.right; } else { close = tree.right; away = tree.left; }
-    best = search(close, point, pointLst, depth + 1, best);
-    if (diff * diff < best.distance) { best = search(away, point, pointLst, depth + 1, best); }
+	diff = (axis == 1) ? point.x - tree.shape.x : (axis == 2) ? point.y - tree.shape.y : point.z - tree.shape.z;
+	close = diff <= 0 ? tree.left : tree.right; away = diff <= 0 ? tree.right : tree.left;
+	
+    best = search(close, close.shape, pointLst, depth + 1, best);
+    if (diff * diff < best.distance) { best = search(away, away.shape, pointLst, depth + 1, best); }
     return best;
 }
 
 //Somewhat unfinished
-function findNearestNeighbor(point, pointLst) {
-    var tree = constructKDtree(points, points.length, 0, 1);
-    const nearestNghbor = search(tree, point, pointLst, 1, null);
-    return nearestNghbor;
-}
+function findNearestNeighbor(point, pointLst) { const tree = constructKDtree(points, points.length, 0, 1); return search(tree, tree.shape, pointLst, 1, null); }
 
 var points = [{x : 10, y : 20, z : 3}, {x : -50, y : 35, z : -7}, {x : -24, y : 57, z : 20}, {x : -15, y : 8, z : 17}, {x : 9, y : 9, z : 9}], kdtree1 = constructKDtree(points, points.length, 0, 1);
