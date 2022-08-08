@@ -79,8 +79,8 @@ function quicksort(array, hi, low) {
     // Sort point list and choose median as pivot element
     let medianIndex = getpivot(array, hi, low, 0);
     let quickpartition = partition(array, hi, low, medianIndex, 0, [true]), left = quickpartition[0], right = quickpartition[1];
-    quicksort(array, low, right - 1);
-    quicksort(array, left + 1, hi);
+    quicksort(array, left - 1, low);
+    quicksort(array, hi, right + 1);
 }
 
 function kdnode(shape) {
@@ -109,8 +109,8 @@ function constructKDtree(pointLst, hi, low, axis) {
     
     // Create node and construct subtree
     node.shape = pointLst[medianIndex];
-    node.left = constructKDtree(pointLst, low, left - 1, (axis + 1) % 3 + 1);
-    node.right = constructKDtree(pointLst, right + 1, hi, (axis + 1) % 3 + 1);
+    node.left = constructKDtree(pointLst, left - 1, low, (axis + 1) % 3 + 1);
+    node.right = constructKDtree(pointLst, hi, right + 1, (axis + 1) % 3 + 1);
     return node;
 }
 
