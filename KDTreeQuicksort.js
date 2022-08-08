@@ -16,8 +16,7 @@ function getpivot(array, hi, low) {
     if (hi - low < 5) { return medianAtmost5(array, hi, low, 0); }
     let i, subRight, mid, median5;
     for (i = low; i < hi; i += 5) {
-        subRight = i + 4;
-        if (subRight > hi) { subRight = hi; }
+        subRight = (i + 4 > hi) ? hi : i + 4;
         median5 = medianAtmost5(array, i, subRight, 0);
         swap(array, median5, low + Math.floor((i - low)/5));
     }
@@ -32,13 +31,13 @@ function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
     storeIndex = low;
     // Move all elements smaller than the pivot to the left of the pivot
     for (j = low; j < hi; j++) {
-        inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].x < pivotValue.x : axis == 2 ? array[j].y < pivotValue.y : array[j].z < pivotValue.z;
+        inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].shape.x < pivotValue.shape.x : axis == 2 ? array[j].shape.y < pivotValue.shape.y : array[j].shape.z < pivotValue.shape.z;
         if (inOrder) { swap(array, storeIndex, j); storeIndex++; }
     }
     // Move all elements equal to the pivot right after the smaller elements
     storeIndexEq = storeIndex;
     for (j = storeIndex; j < hi; j++) {
-        inOrder = axis == 0 ? array[j] == pivotValue : axis == 1 ? array[j].x == pivotValue.x : axis == 2 ? array[j].y == pivotValue.y : array[j].z == pivotValue.z;
+        inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].shape.x < pivotValue.shape.x : axis == 2 ? array[j].shape.y < pivotValue.shape.y : array[j].shape.z < pivotValue.shape.z;
         if (inOrder) { swap(array, storeIndexEq, j); storeIndexEq++; }
     }
     // Move the pivot to where it belongs
@@ -58,10 +57,10 @@ function medianAtmost5(array, hi, low, axis) {
     switch (hi - low) {
         case 5: case 4:
         for (i = low + 1; i <= hi; i++) {
-            inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].x > array[j].x : axis == 2 ? array[j - 1].y > array[j].y : array[j - 1].z > array[j].z;
+            inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].shape.x > array[j].shape.x : axis == 2 ? array[j - 1].shape.y > array[j].shape.y : array[j - 1].shape.z > array[j].shape.z;
             for (j = i; j > low && inOrder; j--) {
                 swap(array, j - 1, j);
-                inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].x > array[j].x : axis == 2 ? array[j - 1].y > array[j].y : array[j - 1].z > array[j].z;
+                inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].shape.x > array[j].shape.x : axis == 2 ? array[j - 1].shape.y > array[j].shape.y : array[j - 1].shape.z > array[j].shape.z;
             } 
         }
         return Math.floor((hi + low) / 2);
