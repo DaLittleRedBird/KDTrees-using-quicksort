@@ -66,7 +66,8 @@ function medianAtmost5(array, hi, low, axis) {
         }
         return Math.floor((hi + low) / 2);
         
-        case 3: inOrder = array[low + 1] >= array[low]; const Max2lowest = (inOrder ? low : low + 1), Min2lowest = (inOrder ? low + 1 : low);
+        case 3: inOrder = array[low + 1] >= array[low];
+        const Max2lowest = (inOrder ? low : low + 1), Min2lowest = (inOrder ? low + 1 : low);
         return array[hi] >= Max2lowest ? Max2lowest : (array[hi] >= Min2lowest ? hi : Min2lowest);
         
         case 2: return array[hi] >= array[low] ? low : hi;
@@ -86,7 +87,7 @@ function quicksort(array, hi, low) {
 function kdnode(shape) {
     this.xView = x; this.yView = y; this.yView = z; this.wView = l; this.wView = w; this.hView = h;
     this.left = null; this.right = null; this.shape = shape;
-    this.intersects = function(rect) { return this.xView + this.wView >= rect.x && rect.x + rect.w >= this.xView && this.yView + this.hView >= rect.y && rect.y + rect.h >= this.yView; }
+    this.contains = function(rect) { return this.xView + this.wView >= rect.x && rect.x + rect.w >= this.xView && this.yView + this.hView >= rect.y && rect.y + rect.h >= this.yView; }
     //Find all 'shapes' that intersect a given range
     this.query = function(range, found) {
         if (!found) { found = []; }
