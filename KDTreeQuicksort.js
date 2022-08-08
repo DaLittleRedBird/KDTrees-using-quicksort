@@ -19,7 +19,7 @@ function getpivot(array, hi, low) {
     let i, subRight, mid, median5;
     for (i = low; i < hi; i += 5) {
         subRight = (i + 4 > hi) ? hi : i + 4;
-        median5 = medianAtmost5(array, i, subRight, 0);
+        median5 = medianAtmost5(array, subRight, i, 0);
         swap(array, median5, low + Math.floor((i - low)/5));
     }
     mid = Math.floor((hi - low) / 10) + low + 1;
