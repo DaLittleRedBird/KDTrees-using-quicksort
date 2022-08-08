@@ -1,3 +1,8 @@
+/*
+NOTE : NONE OF THIS has been rigourously bug tested yet, if you intend to fork any of this, then make sure you rigourously bug test/fix it 
+first before using it for any projects of your own.
+*/
+
 // Returns the k-th smallest element of list within left...right inclusive (i.e. left <= k <= right).
 function quickselect(array, hi, low, k) {
     let pivotIndex;
