@@ -101,17 +101,17 @@ function kdnode(shape) {
 }
 
 //A 3d k-d tree constructor
-function constructkdtree(pointLst, hi, low, axis) {
+function constructKDtree(pointLst, hi, low, axis) {
     if (low >= hi || low < 0) {return;}
     
     // Sort point list and choose median as pivot element
-    let medianIndex = getpivot(pointLst, hi, low, axis), node = new kdNode(pointLst[medianIndex]);
+    let medianIndex = getpivot(pointLst, hi, low, axis), node = new kdnode(pointLst[medianIndex]);
     let quickpartition = partition(pointLst, hi, low, medianIndex, axis, [true]), left = quickpartition[0], right = quickpartition[1];
     
     // Create node and construct subtree
     node.shape = pointLst[medianIndex];
-    node.left = constructkdtree(pointLst, low, left - 1, (axis + 1) % 3 + 1);
-    node.right = constructkdtree(pointLst, right + 1, hi, (axis + 1) % 3 + 1);
+    node.left = constructKDtree(pointLst, low, left - 1, (axis + 1) % 3 + 1);
+    node.right = constructKDtree(pointLst, right + 1, hi, (axis + 1) % 3 + 1);
     return node;
 }
 
@@ -135,9 +135,9 @@ function search(tree, point, pointLst, depth, nearestNghbor) {
 
 //Somewhat unfinished
 function findNearestNeighbor(point, pointLst) {
-    var tree = constructkdtree(points, points.length, 0, 1);
+    var tree = constructKDtree(points, points.length, 0, 1);
     const nearestNghbor = search(tree, point, pointLst, 1, null);
     return nearestNghbor;
 }
 
-var points = [{x : 10, y : 20, z : 3}, {x : -50, y : 35, z : -7}, {x : -24, y : 57, z : 20}, {x : -15, y : 8, z : 17}, {x : 9, y : 9, z : 9}], kdtree1 = constructkdtree(points, points.length, 0, 1);
+var points = [{x : 10, y : 20, z : 3}, {x : -50, y : 35, z : -7}, {x : -24, y : 57, z : 20}, {x : -15, y : 8, z : 17}, {x : 9, y : 9, z : 9}], kdtree1 = constructKDtree(points, points.length, 0, 1);
