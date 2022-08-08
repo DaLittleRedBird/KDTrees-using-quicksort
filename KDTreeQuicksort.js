@@ -55,9 +55,9 @@ function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
 }
 
 function medianAtmost5(array, hi, low, axis) {
-    let i, j, inOrder;
+    let i, j, inOrder, Max2lowest, Min2lowest;
     switch (hi - low) {
-        case 5: case 4:
+        case 5:
         for (i = low + 1; i <= hi; i++) {
             inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].shape.x > array[j].shape.x : axis == 2 ? array[j - 1].shape.y > array[j].shape.y : array[j - 1].shape.z > array[j].shape.z;
             for (j = i; j > low && inOrder; j--) {
@@ -66,11 +66,41 @@ function medianAtmost5(array, hi, low, axis) {
             } 
         }
         return Math.floor((hi + low) / 2);
+        case 4:
+        /*
+        4 elems : (low <= low + 1) -> (hi - 1 <= hi) -> (min(low, low + 1) <= min(hi - 1, hi)) -> (max(low, low + 1) <= max(hi - 1, hi)) -> (min(max(low, low + 1), max(hi - 1, hi)) <= max(min(low, low + 1), min(hi - 1, hi))) ~ (min(max(a, b), max(c, d)) <= max(min(a, b), min(c, d)))
         
-        case 3: inOrder = array[low + 1] >= array[low];
-        const Max2lowest = (inOrder ? low : low + 1), Min2lowest = (inOrder ? low + 1 : low);
+        a b c d
+
+        abcd/11111 or acdb/1110x or acbd/11110 or cabd/1101x or cadb/11001 or cdab/11000 or
+        adbc/10110 or adcb/1010z or abdc/10111 or dabc/1001z or dcab/10000 or dacb/10001 or
+        bacd/01111 or bcda/0110y or bcad/01110 or cbad/0101y or cdba/01000 or cbda/01001 or
+        bdac/00110 or bdca/0010w or badc/00111 or dbac/0001w or dbca/00001 or dcba/00000
+        
+        inOrder = array[low + 1] >= array[low]; Max2lowest = (inOrder ? low + 1 : low); Min2lowest = (inOrder ? low : low + 1);
+        const alsoInOrder = array[hi] >= array[hi - 1], Max2highest = (alsoInOrder ? hi : hi - 1), Min2highest = (alsoInOrder ? hi - 1 : hi), alsoAlsoInOrder = Math.min(Max2lowest, Max2highest) <= Math.max(Min2lowest, Min2highest);
+        
+        return inOrder ? alsoInOrder ? Min2lowest >= Min2highest ? Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+							                                     : Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+			                         : Min2lowest >= Min2highest ? Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+							                                     : Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+	                   : alsoInOrder ? Min2lowest >= Min2highest ? Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+							         : Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+			                                                     : Min2lowest >= Min2highest ? Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+							         : Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+        */
+        return inOrder ? alsoInOrder ? Min2lowest >= Min2highest ? Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+                                                                 : Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+                                     : Min2lowest >= Min2highest ? Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+                                                                 : Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+	                   : alsoInOrder ? Min2lowest >= Min2highest ? Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+							         : Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+                                                                 : Min2lowest >= Min2highest ? Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+                                     : Max2lowest >= Min2highest ? (Max2lowest >= Max2highest ? : ) : (Max2lowest >= Max2highest ? : )
+        
+        
+        case 3: inOrder = array[low + 1] >= array[low]; Max2lowest = (inOrder ? low : low + 1), Min2lowest = (inOrder ? low + 1 : low);
         return array[hi] >= Max2lowest ? Max2lowest : (array[hi] >= Min2lowest ? hi : Min2lowest);
-        
         case 2: return array[hi] >= array[low] ? low : hi;
         default: return low;
     }
