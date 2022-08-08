@@ -1,7 +1,9 @@
 function swap(array, a, b) { const temp = array[a]; array[a] = array[b]; array[b] = temp; }
 
 // Returns the k-th smallest element of list within left...right inclusive (i.e. left <= k <= right).
-function quickselect(array, hi, low, k) {
+function quickselect(array, hi, low, k) { return array[partitionselect(array, hi, low, k)]; }
+
+function partitionselect(array, hi, low, k) {
     let pivotIndex;
     while (low < hi) {
         pivotIndex = getpivot(array, hi, low, 0);
@@ -21,7 +23,7 @@ function getpivot(array, hi, low) {
         swap(array, median5, low + Math.floor((i - low)/5));
     }
     mid = Math.floor((hi - low) / 10) + low + 1;
-    return quickselect(array, low, low + Math.floor((hi - low) / 5), mid);
+    return partitionselect(array, low, low + Math.floor((hi - low) / 5), mid);
 }
 
 function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
