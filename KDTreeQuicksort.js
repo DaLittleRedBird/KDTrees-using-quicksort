@@ -30,11 +30,11 @@ function getpivot(array, hi, low, axis) {
         if (subRight > hi) { subRight = hi; }
         median5 = medianAtmost5(list, i, subRight);
         temp = array[median5];
-        array[median5] = array[low + Math.floor((i − low)/5)];
-        array[low + Math.floor((i − low)/5)] = temp;
+        array[median5] = array[low + Math.floor((i - low)/5)];
+        array[low + Math.floor((i - low)/5)] = temp;
     }
-    mid = Math.floor((hi − low) / 10) + low + 1;
-    return quickselect(array, low, low + Math.floor((hi − low) / 5), mid);
+    mid = Math.floor((hi - low) / 10) + low + 1;
+    return quickselect(array, low, low + Math.floor((hi - low) / 5), mid);
 }
 
 function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
@@ -81,12 +81,10 @@ function medianAtmost5(array, hi, low) {
         case 4:
         i = low + 1;
         while (i <= hi) {
-            j = i;
-            while (j > low && array[j − 1] > array[j]) {
+            for (j = i; j > low && array[j - 1] > array[j]; j--) {
                 temp = array[j - 1];
                 array[j - 1] = array[j];
                 array[j] = temp;
-                j--;
             }
             i++;
         }
