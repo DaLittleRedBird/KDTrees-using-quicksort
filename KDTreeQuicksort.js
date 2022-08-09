@@ -188,6 +188,6 @@ function searchNearNeighbors(tree, point, axis, nearestNghbor) {
 	return best;
 }
 
-function findNearestNeighbor(pointLst, pointIdx) { const tree = constructkdtree(pointLst, pointLst.length - 1, 0, 1); return searchNearNeighbors(tree, pointLst[pointIdx], 1, tree.shape); }
+function findNearestNeighbor(pointLst, pointIdx) { const tree = constructkdtree(pointLst, pointLst.length - 1, 1, 1); return searchNearNeighbors(tree, pointLst[pointIdx], 1, tree.shape); }
 
 var points = [{x : 10, y : 20, z : 3}, {x : -50, y : 35, z : -7}, {x : -24, y : 57, z : 20}, {x : -15, y : 8, z : 17}, {x : 9, y : 9, z : 9}], kdtree1 = constructKDtree(points, points.length, 0, 1);
