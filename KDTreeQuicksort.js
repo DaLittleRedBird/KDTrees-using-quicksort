@@ -40,11 +40,11 @@ function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
 	let j, storeIndex, storeIndexEq, inOrder;
 	
 	// Move pivot to end
-	let pivotValue = array[pivotIdx];
+	let pivotValue = array[pivotIdx], temp;
 	switch (axis) {
 		case 0: array[pivotIdx] = array[hi]; array[hi] = pivotValue; break;
 		case 1: 
-			const temp = { x : array[pivotIdx].x, y : array[pivotIdx].y, z : array[pivotIdx].z };
+			temp = { x : array[pivotIdx].x, y : array[pivotIdx].y, z : array[pivotIdx].z };
 			array[pivotIdx].x = array[hi].x;
 			array[pivotIdx].y = array[hi].y;
 			array[pivotIdx].z = array[hi].z;
@@ -54,7 +54,7 @@ function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
 			pivotValue = temp.x;
 		break;
 		case 2: 
-			const temp = { x : array[pivotIdx].x, y : array[pivotIdx].y, z : array[pivotIdx].z };
+			temp = { x : array[pivotIdx].x, y : array[pivotIdx].y, z : array[pivotIdx].z };
 			array[pivotIdx].x = array[hi].x;
 			array[pivotIdx].y = array[hi].y;
 			array[pivotIdx].z = array[hi].z;
@@ -64,7 +64,7 @@ function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
 			pivotValue = temp.y;
 		break;
 		case 3: 
-			const temp = { x : array[pivotIdx].x, y : array[pivotIdx].y, z : array[pivotIdx].z };
+			temp = { x : array[pivotIdx].x, y : array[pivotIdx].y, z : array[pivotIdx].z };
 			array[pivotIdx].x = array[hi].x;
 			array[pivotIdx].y = array[hi].y;
 			array[pivotIdx].z = array[hi].z;
