@@ -156,9 +156,10 @@ function getdist(point) { return point.x * point.x + point.y * point.y + point.z
 
 //A 3d k-d tree constructor
 function constructKDtree(pointLst, hi, low, axis) {
-	if (low >= hi || low < 0) {return null;}
+	if (low >= hi) {return new kdnode({ x : pointLst[low].x, y : pointLst[low].y, z : pointLst[low].z });}
+	low = low < 0 ? 0 : low;
 	hi = hi >= pointLst.length ? pointLst.length - 1 : hi;
-    
+	
 	// Sort point list and choose median as pivot element
 	let medianIndex = getpivot(pointLst, hi, low, axis), node = new kdnode(pointLst[medianIndex]);
 	let quickpartition = partition(pointLst, hi, low, medianIndex, axis, [true]), left = quickpartition[0], right = quickpartition[1];
