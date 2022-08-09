@@ -183,8 +183,8 @@ function searchNearNeighbors(tree, point, axis, nearestNghbor) {
 	diff = (axis == 1) ? point.x - tree.shape.x : (axis == 2) ? point.y - tree.shape.y : point.z - tree.shape.z;
 	close = diff <= 0 ? tree.left : tree.right; away = diff <= 0 ? tree.right : tree.left;
 	
-	best = searchNearNeighbors(close, close.shape, (axis + 1) % 3 + 1, best);
-	if (diff * diff < best.distance) { best = searchNearNeighbors(away, away.shape, (axis + 1) % 3 + 1, best); }
+	best = searchNearNeighbors(close, point, (axis + 1) % 3 + 1, best);
+	if (diff * diff < best.distance) { best = searchNearNeighbors(away, point, (axis + 1) % 3 + 1, best); }
 	return best;
 }
 
