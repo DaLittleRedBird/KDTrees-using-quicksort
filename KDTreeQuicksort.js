@@ -1,82 +1,95 @@
-function swap(array, a, b) { const temp = array[a]; array[a] = array[b]; array[b] = temp; }
+function swap(array, a, b, areShapes) {
+	if (areShapes) {
+		const temp = { x : array[a].x, y : array[a].y, z : array[a].z };
+		array[a].x = array[b].x;
+		array[a].y = array[b].y;
+		array[a].z = array[b].z;
+		array[b].x = temp.x;
+		array[b].y = temp.y;
+		array[b].z = temp.z;
+	} else { const temp = array[a]; array[a] = array[b]; array[b] = temp; }
+}
 
 // Returns the k-th smallest element of list within left...right inclusive (i.e. left <= k <= right).
 function quickselect(array, hi, low, k) { return array[partitionselect(array, hi, low, k)]; }
 
 function partitionselect(array, hi, low, k) {
-    let pivotIndex;
-    while (low < hi) {
-        pivotIndex = getpivot(array, hi, low, 0);
-        pivotIndex = partition(array, hi, low, pivotIndex, 0, [false, k]);
-        if (pivotIndex == k) { return k; }
-        if (pivotIndex > k) { right = pivotIndex - 1; } else { left = pivotIndex + 1; }
-    }
-    return low;
+	let pivotIndex;
+	while (low < hi) {
+		pivotIndex = getpivot(array, hi, low, 0);
+		pivotIndex = partition(array, hi, low, pivotIndex, 0, [false, k]);
+		if (pivotIndex == k) { return k; }
+		if (pivotIndex > k) { right = pivotIndex - 1; } else { left = pivotIndex + 1; }
+	}
+	return low;
 }
 
-function getpivot(array, hi, low) {
-    if (hi - low < 5) { return medianAtmost5(array, hi, low, 0); }
+function getpivot(array, hi, low, axis) {
+    if (hi - low < 5) { return medianAtmost5(array, hi, low, axis); }
     let i, subRight, mid, median5;
     for (i = low; i < hi; i += 5) {
         subRight = (i + 4 > hi) ? hi : i + 4;
         median5 = medianAtmost5(array, subRight, i, 0);
-        swap(array, median5, low + Math.floor((i - low)/5));
+        swap(array, median5, low + Math.floor((i - low)/5), axis != 0);
     }
     mid = Math.floor((hi - low) / 10) + low + 1;
     return partitionselect(array, low, low + Math.floor((hi - low) / 5), mid);
 }
 
 function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
-    let j, storeIndex, storeIndexEq, inOrder;
+	let j, storeIndex, storeIndexEq, inOrder;
 	
-    // Move pivot to end
-    let pivotValue = array[pivotIdx]; 
+	// Move pivot to end
+	let pivotValue = array[pivotIdx]; 
 	switch (axis) {
 		case 0: array[pivotIdx] = array[hi]; array[hi] = pivotValue; break;
 		case 1: 
-			array[pivotIdx] = array[hi]; array[hi] = pivotValue; 
+			array[pivotIdx] = array[hi];
+			array[hi] = pivotValue; 
 		break;
 		case 2: 
-			array[pivotIdx] = array[hi]; array[hi] = pivotValue; 
+			array[pivotIdx] = array[hi];
+			array[hi] = pivotValue; 
 		break;
 		case 3: 
-			array[pivotIdx] = array[hi]; array[hi] = pivotValue; 
+			array[pivotIdx] = array[hi];
+			array[hi] = pivotValue; 
 		break;
-    }
+	}
 	
-    storeIndex = low;
-    // Move all elements smaller than the pivot to the left of the pivot
-    for (j = low; j < hi; j++) {
-        inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].shape.x < pivotValue.shape.x : axis == 2 ? array[j].shape.y < pivotValue.shape.y : array[j].shape.z < pivotValue.shape.z;
-        if (inOrder) { swap(array, storeIndex, j); storeIndex++; }
-    }
-    // Move all elements equal to the pivot right after the smaller elements
-    storeIndexEq = storeIndex;
-    for (j = storeIndex; j < hi; j++) {
-        inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].shape.x < pivotValue.shape.x : axis == 2 ? array[j].shape.y < pivotValue.shape.y : array[j].shape.z < pivotValue.shape.z;
-        if (inOrder) { swap(array, storeIndexEq, j); storeIndexEq++; }
-    }
-    // Move the pivot to where it belongs
-    swap(array, storeIndexEq, hi);
+	storeIndex = low;
+	// Move all elements smaller than the pivot to the left of the pivot
+	for (j = low; j < hi; j++) {
+		inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].shape.x < pivotValue.shape.x : axis == 2 ? array[j].shape.y < pivotValue.shape.y : array[j].shape.z < pivotValue.shape.z;
+		if (inOrder) { swap(array, storeIndex, j, axis != 0); storeIndex++; }
+	}
+	// Move all elements equal to the pivot right after the smaller elements
+	storeIndexEq = storeIndex;
+	for (j = storeIndex; j < hi; j++) {
+		inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].shape.x < pivotValue.shape.x : axis == 2 ? array[j].shape.y < pivotValue.shape.y : array[j].shape.z < pivotValue.shape.z;
+		if (inOrder) { swap(array, storeIndexEq, j, axis != 0); storeIndexEq++; }
+	}
+	// Move the pivot to where it belongs
+	swap(array, storeIndexEq, hi);
     
-    //Is this quicksort? If so, return the bounds of the partition
-    if (quickalgPair[0]) {return [storeIndex, storeIndexEq];}
+	//Is this quicksort? If so, return the bounds of the partition
+	if (quickalgPair[0]) {return [storeIndex, storeIndexEq];}
     
-    // If not, return location of pivot considering the desired location quickalgPair[1]
-    if (quickalgPair[1] < storeIndex) {return storeIndex;}  // quickalgPair[1] is in the group of smaller elements
-    if (quickalgPair[1] <= storeIndexEq) {return quickalgPair[1];}  // quickalgPair[1] is in the group equal to pivot
-    return storeIndexEq; // quickalgPair[1] is in the group of larger elements
+	// If not, return location of pivot considering the desired location quickalgPair[1]
+	if (quickalgPair[1] < storeIndex) {return storeIndex;}  // quickalgPair[1] is in the group of smaller elements
+	if (quickalgPair[1] <= storeIndexEq) {return quickalgPair[1];}  // quickalgPair[1] is in the group equal to pivot
+	return storeIndexEq; // quickalgPair[1] is in the group of larger elements
 }
 
 function medianAtmost5(array, hi, low, axis) {
 	let i, j, inOrder, Max2lowest, Min2lowest;
 	for (i = low + 1; i <= hi; i++) {
-		inOrder = axis == 0 ? array[i - 1] > array[i] : axis == 1 ? array[i - 1].shape.x > array[i].shape.x : axis == 2 ? array[i - 1].shape.y > array[i].shape.y : array[i - 1].shape.z > array[i].shape.z;
-        for (j = i; j > low && inOrder; j--) {
-			swap(array, j - 1, j);
-			inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].shape.x > array[j].shape.x : axis == 2 ? array[j - 1].shape.y > array[j].shape.y : array[j - 1].shape.z > array[j].shape.z;
-        }
-    }
+		inOrder = axis == 0 ? array[i - 1] > array[i] : axis == 1 ? array[i - 1].x > array[i].x : axis == 2 ? array[i - 1].y > array[i].y : array[i - 1].z > array[i].z;
+		for (j = i; j > low && inOrder; j--) {
+			swap(array, j - 1, j, axis != 0);
+			inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].x > array[j].x : axis == 2 ? array[j - 1].y > array[j].y : array[j - 1].z > array[j].z;
+		}
+	}
 	return Math.floor((hi + low) / 2);
     /*switch (hi - low) {
         case 4:
@@ -120,12 +133,12 @@ function medianAtmost5(array, hi, low, axis) {
 }
 
 function quicksort(array, hi, low) {
-    if (low >= hi || low < 0) {return;}
-    // Sort point list and choose median as pivot element
-    let medianIndex = getpivot(array, hi, low, 0);
-    let quickpartition = partition(array, hi, low, medianIndex, 0, [true]), left = quickpartition[0], right = quickpartition[1];
-    quicksort(array, left - 1, low);
-    quicksort(array, hi, right + 1);
+	if (low >= hi || low < 0) {return;}
+	// Sort point list and choose median as pivot element
+	let medianIndex = getpivot(array, hi, low, 0);
+	let quickpartition = partition(array, hi, low, medianIndex, 0, [true]), left = quickpartition[0], right = quickpartition[1];
+	quicksort(array, left - 1, low);
+	quicksort(array, hi, right + 1);
 }
 
 function kdnode(shape) {
@@ -163,17 +176,17 @@ function constructKDtree(pointLst, hi, low, axis) {
 
 //Unfinished
 function search(tree, point, pointLst, depth, nearestNghbor) {
-    if (!tree) { return nearestNeighbor; }
-    let best = nearestNghbor, bestDist = getdist(nearestNghbor), curDist = getdist(point), axis = (depth % 3) + 1, diff, close, away;
+	if (!tree) { return nearestNeighbor; }
+	let best = nearestNghbor, bestDist = getdist(nearestNghbor), curDist = getdist(point), axis = (depth % 3) + 1, diff, close, away;
     
-    if (!best || curDist < bestDist) { best = point; }
+	if (!best || curDist < bestDist) { best = point; }
     
 	diff = (axis == 1) ? point.x - tree.shape.x : (axis == 2) ? point.y - tree.shape.y : point.z - tree.shape.z;
 	close = diff <= 0 ? tree.left : tree.right; away = diff <= 0 ? tree.right : tree.left;
 	
-    best = search(close, close.shape, pointLst, depth + 1, best);
-    if (diff * diff < best.distance) { best = search(away, away.shape, pointLst, depth + 1, best); }
-    return best;
+	best = search(close, close.shape, pointLst, depth + 1, best);
+	if (diff * diff < best.distance) { best = search(away, away.shape, pointLst, depth + 1, best); }
+	return best;
 }
 
 function findNearestNeighbor(point, pointLst) { const tree = constructKDtree(points, points.length, 0, 1); return search(tree, tree.shape, pointLst, 1, null); }
