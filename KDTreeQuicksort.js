@@ -130,6 +130,8 @@ function kdnode(shape) {
     }
 }
 
+function getdist(point) { return point.x * point.x + point.y * point.y + point.z * point.z; }
+
 //A Somewhat unfinished 3d k-d tree constructor
 function constructKDtree(pointLst, hi, low, axis) {
     if (low >= hi || low < 0) {return;}
@@ -144,8 +146,6 @@ function constructKDtree(pointLst, hi, low, axis) {
     node.right = constructKDtree(pointLst, hi, right + 1, (axis + 1) % 3 + 1);
     return node;
 }
-
-function getdist(point) { return point.x * point.x + point.y * point.y + point.z * point.z; }
 
 //Unfinished
 function search(tree, point, pointLst, depth, nearestNghbor) {
@@ -162,7 +162,6 @@ function search(tree, point, pointLst, depth, nearestNghbor) {
     return best;
 }
 
-//Somewhat unfinished
 function findNearestNeighbor(point, pointLst) { const tree = constructKDtree(points, points.length, 0, 1); return search(tree, tree.shape, pointLst, 1, null); }
 
 var points = [{x : 10, y : 20, z : 3}, {x : -50, y : 35, z : -7}, {x : -24, y : 57, z : 20}, {x : -15, y : 8, z : 17}, {x : 9, y : 9, z : 9}], kdtree1 = constructKDtree(points, points.length, 0, 1);
