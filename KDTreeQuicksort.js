@@ -7,13 +7,13 @@ function swap(array, a, b, areShapes) {
 }
 
 // Returns the k-th smallest element of list within left...right inclusive (i.e. left <= k <= right).
-function quickselect(array, hi, low, k) { return array[partitionselect(array, hi, low, k)]; }
+function quickselect(array, hi, low, k, axis) { return array[partitionselect(array, hi, low, k, axis)]; }
 
-function partitionselect(array, hi, low, k) {
+function partitionselect(array, hi, low, k, axis) {
 	let pivotIndex;
 	while (low < hi) {
-		pivotIndex = getpivot(array, hi, low, 0);
-		pivotIndex = partition(array, hi, low, pivotIndex, 0, [false, k]);
+		pivotIndex = getpivot(array, hi, low, axis);
+		pivotIndex = partition(array, hi, low, pivotIndex, axis, [false, k]);
 		if (pivotIndex == k) { return k; }
 		if (pivotIndex > k) { right = pivotIndex - 1; } else { left = pivotIndex + 1; }
 	}
@@ -119,11 +119,18 @@ function medianAtmost5(array, hi, low, axis) {
     }*/
 }
 
-function quicksort(array, hi, low) {
+/*
+The axis variable stores the axis that quicksort is sorting against.
+0 - No axis, plain quicksort
+1 - x-axis
+2 - y-axis
+3 - z-axis
+*/
+function quicksort(array, hi, low, axis) {
 	if (low >= hi || low < 0) {return;}
 	// Sort point list and choose median as pivot element
-	let medianIndex = getpivot(array, hi, low, 0);
-	let quickpartition = partition(array, hi, low, medianIndex, 0, [true]), left = quickpartition[0], right = quickpartition[1];
+	let medianIndex = getpivot(array, hi, low, axis);
+	let quickpartition = partition(array, hi, low, medianIndex, axis, [true]), left = quickpartition[0], right = quickpartition[1];
 	quicksort(array, left - 1, low);
 	quicksort(array, hi, right + 1);
 }
