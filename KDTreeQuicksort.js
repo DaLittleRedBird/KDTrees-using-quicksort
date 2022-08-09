@@ -128,6 +128,7 @@ The axis variable stores the axis that quicksort is sorting against.
 */
 function quicksort(array, hi, low, axis) {
 	if (low >= hi || low < 0) {return;}
+	hi = hi >= pointLst.length ? pointLst.length - 1 : hi;
 	// Sort point list and choose median as pivot element
 	let medianIndex = getpivot(array, hi, low, axis);
 	let quickpartition = partition(array, hi, low, medianIndex, axis, [true]), left = quickpartition[0], right = quickpartition[1];
@@ -153,19 +154,20 @@ function kdnode(shape) {
 
 function getdist(point) { return point.x * point.x + point.y * point.y + point.z * point.z; }
 
-//A Somewhat unfinished 3d k-d tree constructor
+//A 3d k-d tree constructor
 function constructKDtree(pointLst, hi, low, axis) {
-    if (low >= hi || low < 0) {return;}
+	if (low >= hi || low < 0) {return null;}
+	hi = hi >= pointLst.length ? pointLst.length - 1 : hi;
     
-    // Sort point list and choose median as pivot element
-    let medianIndex = getpivot(pointLst, hi, low, axis), node = new kdnode(pointLst[medianIndex]);
-    let quickpartition = partition(pointLst, hi, low, medianIndex, axis, [true]), left = quickpartition[0], right = quickpartition[1];
+	// Sort point list and choose median as pivot element
+	let medianIndex = getpivot(pointLst, hi, low, axis), node = new kdnode(pointLst[medianIndex]);
+	let quickpartition = partition(pointLst, hi, low, medianIndex, axis, [true]), left = quickpartition[0], right = quickpartition[1];
     
-    // Create node and construct subtree
-    node.shape = pointLst[medianIndex];
-    node.left = constructKDtree(pointLst, left - 1, low, (axis + 1) % 3 + 1);
-    node.right = constructKDtree(pointLst, hi, right + 1, (axis + 1) % 3 + 1);
-    return node;
+	// Create node and construct subtree
+	node.shape = pointLst[medianIndex];
+	node.left = constructKDtree(pointLst, low, left - 1, (axis + 1) % 3 + 1);
+	node.right = constructKDtree(pointLst, right + 1, hi, (axis + 1) % 3 + 1);
+	return node;
 }
 
 //Unfinished
