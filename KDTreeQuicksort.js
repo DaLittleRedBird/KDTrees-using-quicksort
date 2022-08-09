@@ -39,9 +39,9 @@ function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
 	let pivotValue = array[pivotIdx];
 	switch (axis) {
 		case 0: array[pivotIdx] = array[hi]; array[hi] = pivotValue; break;
-		case 1: swap(array, pivotIdx, hi, true); pivotValue = temp.x; break;
-		case 2: swap(array, pivotIdx, hi, true); pivotValue = temp.y; break;
-		case 3: swap(array, pivotIdx, hi, true); pivotValue = temp.z; break;
+		case 1: swap(array, pivotIdx, hi, true); pivotValue = array[hi].x; break;
+		case 2: swap(array, pivotIdx, hi, true); pivotValue = array[hi].y; break;
+		case 3: swap(array, pivotIdx, hi, true); pivotValue = array[hi].z; break;
 	}
 	
 	storeIndex = low;
