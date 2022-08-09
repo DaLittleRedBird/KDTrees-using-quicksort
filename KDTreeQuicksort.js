@@ -136,24 +136,40 @@ function quicksort(array, hi, low, axis) {
 	quicksort(array, hi, right + 1, axis);
 }
 
-function kdnode(shape) {
-    this.xView = x; this.yView = y; this.yView = z; this.wView = l; this.wView = w; this.hView = h;
-    this.left = null; this.right = null; this.shape = shape;
-    this.contains = function(rect) { return this.xView + this.wView >= rect.x && rect.x + rect.w >= this.xView && this.yView + this.hView >= rect.y && rect.y + rect.h >= this.yView; }
-    //Find all 'shapes' that intersect a given range
-    this.query = function(range, found) {
-        if (!found) { found = []; }
-        if (range.intersects(this.shape)) { found.push(this.shape); }
-        
-        if (this.left) { this.left.query(range, found); }
-        if (this.right) { this.right.query(range, found); }
-        
-        return found;
-    }
-}
-
 //Euclidian distance metric
 function getdist(point, other) { const delX = point.x - other.x, delY = point.y - other.y, delZ = point.z - other.z; return delX * delX + delY * delY + delZ * delZ; }
+
+function searchNearNeighbors(tree, point, axis, nearestNghbor) {
+	if (!tree) { return nearestNghbor; }
+	let best = nearestNghbor, bestDist = getdist(point, nearestNghbor), curDist = getdist(point, tree.shape), diff, close, away;
+	
+	if (!best || curDist < bestDist) { best = tree.shape; }
+	
+	diff = (axis == 1) ? point.x - tree.shape.x : (axis == 2) ? point.y - tree.shape.y : point.z - tree.shape.z;
+	close = diff <= 0 ? tree.left : tree.right; away = diff <= 0 ? tree.right : tree.left;
+	
+	best = searchNearNeighbors(close, point, (axis + 1) % 3 + 1, best);
+	if (diff * diff < bestDist) { best = searchNearNeighbors(away, point, (axis + 1) % 3 + 1, best); }
+	return best;
+}
+
+function kdnode(shape) {
+	this.xView = x; this.yView = y; this.yView = z; this.wView = l; this.wView = w; this.hView = h;
+	this.left = null; this.right = null; this.shape = shape;
+	this.contains = function(rect) { return this.xView + this.wView >= rect.x && rect.x + rect.w >= this.xView && this.yView + this.hView >= rect.y && rect.y + rect.h >= this.yView; }
+	//Find all 'shapes' that intersect a given range
+	this.query = function(range, found) {
+		if (!found) { found = []; }
+        	if (range.intersects(this.shape)) { found.push(this.shape); }
+		
+        	if (this.left) { this.left.query(range, found); }
+        	if (this.right) { this.right.query(range, found); }
+		
+		return found;
+	}
+	//K-d nearest neighbor algorithm; K-d tree perspective
+	this.nearestNeighbor = function(point) { return searchNearNeighbors(this, point, 1, this.shape); }
+}
 
 //A 3d k-d tree constructor
 function constructKDtree(pointLst, hi, low, axis) {
@@ -174,20 +190,7 @@ function constructKDtree(pointLst, hi, low, axis) {
 	return node;
 }
 
-function searchNearNeighbors(tree, point, axis, nearestNghbor) {
-	if (!tree) { return nearestNghbor; }
-	let best = nearestNghbor, bestDist = getdist(point, nearestNghbor), curDist = getdist(point, tree.shape), diff, close, away;
-	
-	if (!best || curDist < bestDist) { best = tree.shape; }
-	
-	diff = (axis == 1) ? point.x - tree.shape.x : (axis == 2) ? point.y - tree.shape.y : point.z - tree.shape.z;
-	close = diff <= 0 ? tree.left : tree.right; away = diff <= 0 ? tree.right : tree.left;
-	
-	best = searchNearNeighbors(close, point, (axis + 1) % 3 + 1, best);
-	if (diff * diff < bestDist) { best = searchNearNeighbors(away, point, (axis + 1) % 3 + 1, best); }
-	return best;
-}
-
+//K-d nearest neighbor algorithm; Point list perspective
 function findNearestNeighbor(pointLst, pointIdx) { const tree = constructkdtree(pointLst, pointLst.length - 1, 1, 1); return searchNearNeighbors(tree, pointLst[pointIdx], 1, tree.shape); }
 
 var points = [{x : 10, y : 20, z : 3}, {x : -50, y : 35, z : -7}, {x : -24, y : 57, z : 20}, {x : -15, y : 8, z : 17}, {x : 9, y : 9, z : 9}], kdtree1 = constructKDtree(points, points.length, 0, 1);
