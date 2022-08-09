@@ -184,7 +184,7 @@ function searchNearNeighbors(tree, point, axis, nearestNghbor) {
 	close = diff <= 0 ? tree.left : tree.right; away = diff <= 0 ? tree.right : tree.left;
 	
 	best = searchNearNeighbors(close, point, (axis + 1) % 3 + 1, best);
-	if (diff * diff < best.distance) { best = searchNearNeighbors(away, point, (axis + 1) % 3 + 1, best); }
+	if (diff * diff < bestDist) { best = searchNearNeighbors(away, point, (axis + 1) % 3 + 1, best); }
 	return best;
 }
 
