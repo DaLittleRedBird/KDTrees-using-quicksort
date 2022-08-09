@@ -152,8 +152,9 @@ function kdnode(shape) {
     }
 }
 
-function getdist(point, other) { return point.x * other.x + point.y * other.y + point.z * other.z; }
-        
+//Euclidian distance metric
+function getdist(point, other) { const delX = point.x - other.x, delY = point.y - other.y, delZ = point.z - other.z; return delX * delX + delY * delY + delZ * delZ; }
+
 //A 3d k-d tree constructor
 function constructKDtree(pointLst, hi, low, axis) {
 	if (low >= hi) {return new kdnode({ x : pointLst[low].x, y : pointLst[low].y, z : pointLst[low].z });}
@@ -173,7 +174,6 @@ function constructKDtree(pointLst, hi, low, axis) {
 	return node;
 }
 
-//Unfinished
 function searchNearNeighbors(tree, point, axis, nearestNghbor) {
 	if (!tree) { return nearestNghbor; }
 	let best = nearestNghbor, bestDist = getdist(point, nearestNghbor), curDist = getdist(point, tree.shape), diff, close, away;
