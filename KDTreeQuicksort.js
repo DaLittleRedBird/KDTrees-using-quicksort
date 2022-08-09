@@ -178,7 +178,7 @@ function searchNearNeighbors(tree, point, axis, nearestNghbor) {
 	if (!tree) { return nearestNghbor; }
 	let best = nearestNghbor, bestDist = getdist(point, nearestNghbor), curDist = getdist(point, tree.shape), diff, close, away;
 	
-	if (!best || curDist < bestDist) { best = point; }
+	if (!best || curDist < bestDist) { best = tree.shape; }
 	
 	diff = (axis == 1) ? point.x - tree.shape.x : (axis == 2) ? point.y - tree.shape.y : point.z - tree.shape.z;
 	close = diff <= 0 ? tree.left : tree.right; away = diff <= 0 ? tree.right : tree.left;
