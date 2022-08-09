@@ -1,12 +1,8 @@
 function swap(array, a, b, areShapes) {
 	if (areShapes) {
 		const temp = { x : array[a].x, y : array[a].y, z : array[a].z };
-		array[a].x = array[b].x;
-		array[a].y = array[b].y;
-		array[a].z = array[b].z;
-		array[b].x = temp.x;
-		array[b].y = temp.y;
-		array[b].z = temp.z;
+		array[a].x = array[b].x; array[a].y = array[b].y; array[a].z = array[b].z;
+		array[b].x = temp.x; array[b].y = temp.y; array[b].z = temp.z;
 	} else { const temp = array[a]; array[a] = array[b]; array[b] = temp; }
 }
 
@@ -40,51 +36,24 @@ function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
 	let j, storeIndex, storeIndexEq, inOrder;
 	
 	// Move pivot to end
-	let pivotValue = array[pivotIdx], temp;
+	let pivotValue = array[pivotIdx];
 	switch (axis) {
 		case 0: array[pivotIdx] = array[hi]; array[hi] = pivotValue; break;
-		case 1: 
-			temp = { x : array[pivotIdx].x, y : array[pivotIdx].y, z : array[pivotIdx].z };
-			array[pivotIdx].x = array[hi].x;
-			array[pivotIdx].y = array[hi].y;
-			array[pivotIdx].z = array[hi].z;
-			array[hi].x = temp.x;
-			array[hi].y = temp.y;
-			array[hi].z = temp.z;
-			pivotValue = temp.x;
-		break;
-		case 2: 
-			temp = { x : array[pivotIdx].x, y : array[pivotIdx].y, z : array[pivotIdx].z };
-			array[pivotIdx].x = array[hi].x;
-			array[pivotIdx].y = array[hi].y;
-			array[pivotIdx].z = array[hi].z;
-			array[hi].x = temp.x;
-			array[hi].y = temp.y;
-			array[hi].z = temp.z;
-			pivotValue = temp.y;
-		break;
-		case 3: 
-			temp = { x : array[pivotIdx].x, y : array[pivotIdx].y, z : array[pivotIdx].z };
-			array[pivotIdx].x = array[hi].x;
-			array[pivotIdx].y = array[hi].y;
-			array[pivotIdx].z = array[hi].z;
-			array[hi].x = temp.x;
-			array[hi].y = temp.y;
-			array[hi].z = temp.z;
-			pivotValue = temp.z;
-		break;
+		case 1: swap(array, pivotIdx, hi, true); pivotValue = temp.x; break;
+		case 2: swap(array, pivotIdx, hi, true); pivotValue = temp.y; break;
+		case 3: swap(array, pivotIdx, hi, true); pivotValue = temp.z; break;
 	}
 	
 	storeIndex = low;
 	// Move all elements smaller than the pivot to the left of the pivot
 	for (j = low; j < hi; j++) {
-		inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].shape.x < pivotValue.shape.x : axis == 2 ? array[j].shape.y < pivotValue.shape.y : array[j].shape.z < pivotValue.shape.z;
+		inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].x < pivotValue.x : axis == 2 ? array[j].y < pivotValue.y : array[j].z < pivotValue.z;
 		if (inOrder) { swap(array, storeIndex, j, axis != 0); storeIndex++; }
 	}
 	// Move all elements equal to the pivot right after the smaller elements
 	storeIndexEq = storeIndex;
 	for (j = storeIndex; j < hi; j++) {
-		inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].shape.x < pivotValue.shape.x : axis == 2 ? array[j].shape.y < pivotValue.shape.y : array[j].shape.z < pivotValue.shape.z;
+		inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].x < pivotValue.x : axis == 2 ? array[j].y < pivotValue.y : array[j].z < pivotValue.z;
 		if (inOrder) { swap(array, storeIndexEq, j, axis != 0); storeIndexEq++; }
 	}
 	// Move the pivot to where it belongs
