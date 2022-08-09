@@ -29,7 +29,7 @@ function getpivot(array, hi, low, axis) {
         swap(array, median5, low + Math.floor((i - low)/5), axis != 0);
     }
     mid = Math.floor((hi - low) / 10) + low + 1;
-    return partitionselect(array, low, low + Math.floor((hi - low) / 5), mid);
+    return partitionselect(array, low, low + Math.floor((hi - low) / 5), mid, axis);
 }
 
 function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
@@ -131,8 +131,8 @@ function quicksort(array, hi, low, axis) {
 	// Sort point list and choose median as pivot element
 	let medianIndex = getpivot(array, hi, low, axis);
 	let quickpartition = partition(array, hi, low, medianIndex, axis, [true]), left = quickpartition[0], right = quickpartition[1];
-	quicksort(array, left - 1, low);
-	quicksort(array, hi, right + 1);
+	quicksort(array, left - 1, low, axis);
+	quicksort(array, hi, right + 1, axis);
 }
 
 function kdnode(shape) {
