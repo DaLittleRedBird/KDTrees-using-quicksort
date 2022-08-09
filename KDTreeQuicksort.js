@@ -167,6 +167,18 @@ function kdnode(shape) {
 		
 		return found;
 	}
+	this.insert = function(newshape) {
+		if (!this.shape) { this.shape = newshape; }
+		let curnode = null, curparent = this, axis = 1, inOrder;
+		while (curparent != null) {
+			curnode = curparent;
+			inOrder = axis == 1 ? curparent.shape.x < newshape.x : axis == 2 ? curparent.shape.y < newshape.y : curparent.shape.z < newshape.z;
+			if (inOrder) { curparent = curparent.left; } else { curparent = curparent.right; }
+			axis = (axis + 1) % 3 + 1;
+		}
+		inOrder = axis == 1 ? curnode.shape.x < newshape.x : axis == 2 ? curnode.shape.y < newshape.y : curnode.shape.z < newshape.z;
+		if (inOrder) { curnode.left.shape := newshape; } else { curnode.right.shape := newshape; }
+	}
 	//K-d nearest neighbor algorithm; K-d tree perspective
 	this.nearestNeighbor = function(point) { return searchNearNeighbors(this, point, 1, this.shape); }
 }
