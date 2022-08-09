@@ -28,8 +28,22 @@ function getpivot(array, hi, low) {
 
 function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
     let j, storeIndex, storeIndexEq, inOrder;
+	
     // Move pivot to end
-    let pivotValue = array[pivotIdx]; array[pivotIdx] = array[hi]; array[hi] = pivotValue;
+    let pivotValue = array[pivotIdx]; 
+	switch (axis) {
+		case 0: array[pivotIdx] = array[hi]; array[hi] = pivotValue; break;
+		case 1: 
+			array[pivotIdx] = array[hi]; array[hi] = pivotValue; 
+		break;
+		case 2: 
+			array[pivotIdx] = array[hi]; array[hi] = pivotValue; 
+		break;
+		case 3: 
+			array[pivotIdx] = array[hi]; array[hi] = pivotValue; 
+		break;
+    }
+	
     storeIndex = low;
     // Move all elements smaller than the pivot to the left of the pivot
     for (j = low; j < hi; j++) {
