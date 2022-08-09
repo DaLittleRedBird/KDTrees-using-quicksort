@@ -47,13 +47,13 @@ function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
 	storeIndex = low;
 	// Move all elements smaller than the pivot to the left of the pivot
 	for (j = low; j < hi; j++) {
-		inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].x < pivotValue.x : axis == 2 ? array[j].y < pivotValue.y : array[j].z < pivotValue.z;
+		inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].x < pivotValue : axis == 2 ? array[j].y < pivotValue : array[j].z < pivotValue;
 		if (inOrder) { swap(array, storeIndex, j, axis != 0); storeIndex++; }
 	}
 	// Move all elements equal to the pivot right after the smaller elements
 	storeIndexEq = storeIndex;
 	for (j = storeIndex; j < hi; j++) {
-		inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].x < pivotValue.x : axis == 2 ? array[j].y < pivotValue.y : array[j].z < pivotValue.z;
+		inOrder = axis == 0 ? array[j] < pivotValue : axis == 1 ? array[j].x < pivotValue : axis == 2 ? array[j].y < pivotValue : array[j].z < pivotValue;
 		if (inOrder) { swap(array, storeIndexEq, j, axis != 0); storeIndexEq++; }
 	}
 	// Move the pivot to where it belongs
