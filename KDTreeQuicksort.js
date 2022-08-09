@@ -57,11 +57,11 @@ function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
 function medianAtmost5(array, hi, low, axis) {
 	let i, j, inOrder, Max2lowest, Min2lowest;
 	for (i = low + 1; i <= hi; i++) {
-		inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].shape.x > array[j].shape.x : axis == 2 ? array[j - 1].shape.y > array[j].shape.y : array[j - 1].shape.z > array[j].shape.z;
-		for (j = i; j > low && inOrder; j--) {
+		inOrder = axis == 0 ? array[i - 1] > array[i] : axis == 1 ? array[i - 1].shape.x > array[i].shape.x : axis == 2 ? array[i - 1].shape.y > array[i].shape.y : array[i - 1].shape.z > array[i].shape.z;
+        for (j = i; j > low && inOrder; j--) {
 			swap(array, j - 1, j);
 			inOrder = axis == 0 ? array[j - 1] > array[j] : axis == 1 ? array[j - 1].shape.x > array[j].shape.x : axis == 2 ? array[j - 1].shape.y > array[j].shape.y : array[j - 1].shape.z > array[j].shape.z;
-        } 
+        }
     }
 	return Math.floor((hi + low) / 2);
     /*switch (hi - low) {
@@ -130,7 +130,7 @@ function kdnode(shape) {
     }
 }
 
-//A 3d k-d tree constructor
+//A Somewhat unfinished 3d k-d tree constructor
 function constructKDtree(pointLst, hi, low, axis) {
     if (low >= hi || low < 0) {return;}
     
