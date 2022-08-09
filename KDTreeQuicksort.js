@@ -40,20 +40,38 @@ function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
 	let j, storeIndex, storeIndexEq, inOrder;
 	
 	// Move pivot to end
-	let pivotValue = array[pivotIdx]; 
+	let pivotValue = array[pivotIdx];
 	switch (axis) {
 		case 0: array[pivotIdx] = array[hi]; array[hi] = pivotValue; break;
 		case 1: 
-			array[pivotIdx] = array[hi];
-			array[hi] = pivotValue; 
+			const temp = { x : array[pivotIdx].x, y : array[pivotIdx].y, z : array[pivotIdx].z };
+			array[pivotIdx].x = array[hi].x;
+			array[pivotIdx].y = array[hi].y;
+			array[pivotIdx].z = array[hi].z;
+			array[hi].x = temp.x;
+			array[hi].y = temp.y;
+			array[hi].z = temp.z;
+			pivotValue = temp.x;
 		break;
 		case 2: 
-			array[pivotIdx] = array[hi];
-			array[hi] = pivotValue; 
+			const temp = { x : array[pivotIdx].x, y : array[pivotIdx].y, z : array[pivotIdx].z };
+			array[pivotIdx].x = array[hi].x;
+			array[pivotIdx].y = array[hi].y;
+			array[pivotIdx].z = array[hi].z;
+			array[hi].x = temp.x;
+			array[hi].y = temp.y;
+			array[hi].z = temp.z;
+			pivotValue = temp.y;
 		break;
 		case 3: 
-			array[pivotIdx] = array[hi];
-			array[hi] = pivotValue; 
+			const temp = { x : array[pivotIdx].x, y : array[pivotIdx].y, z : array[pivotIdx].z };
+			array[pivotIdx].x = array[hi].x;
+			array[pivotIdx].y = array[hi].y;
+			array[pivotIdx].z = array[hi].z;
+			array[hi].x = temp.x;
+			array[hi].y = temp.y;
+			array[hi].z = temp.z;
+			pivotValue = temp.z;
 		break;
 	}
 	
@@ -70,7 +88,7 @@ function partition(array, hi, low, pivotIdx, axis, quickalgPair) {
 		if (inOrder) { swap(array, storeIndexEq, j, axis != 0); storeIndexEq++; }
 	}
 	// Move the pivot to where it belongs
-	swap(array, storeIndexEq, hi);
+	swap(array, storeIndexEq, hi, axis != 0);
     
 	//Is this quicksort? If so, return the bounds of the partition
 	if (quickalgPair[0]) {return [storeIndex, storeIndexEq];}
