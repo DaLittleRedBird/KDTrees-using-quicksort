@@ -172,8 +172,8 @@ function constructKDtree(pointLst, hi, low, axis) {
 }
 
 //Unfinished
-function search(tree, point, pointLst, depth, nearestNghbor) {
-	if (!tree) { return nearestNeighbor; }
+function searchNearNeighbors(tree, point, pointLst, depth, nearestNghbor) {
+	if (!tree) { return nearestNghbor; }
 	let best = nearestNghbor, bestDist = getdist(nearestNghbor), curDist = getdist(point), axis = (depth % 3) + 1, diff, close, away;
     
 	if (!best || curDist < bestDist) { best = point; }
@@ -181,11 +181,11 @@ function search(tree, point, pointLst, depth, nearestNghbor) {
 	diff = (axis == 1) ? point.x - tree.shape.x : (axis == 2) ? point.y - tree.shape.y : point.z - tree.shape.z;
 	close = diff <= 0 ? tree.left : tree.right; away = diff <= 0 ? tree.right : tree.left;
 	
-	best = search(close, close.shape, pointLst, depth + 1, best);
-	if (diff * diff < best.distance) { best = search(away, away.shape, pointLst, depth + 1, best); }
+	best = searchNearNeighbors(close, close.shape, pointLst, depth + 1, best);
+	if (diff * diff < best.distance) { best = searchNearNeighbors(away, away.shape, pointLst, depth + 1, best); }
 	return best;
 }
 
-function findNearestNeighbor(point, pointLst) { const tree = constructKDtree(points, points.length, 0, 1); return search(tree, tree.shape, pointLst, 1, null); }
+function findNearestNeighbor(point, pointLst) { const tree = constructKDtree(points, points.length, 0, 1); return searchNearNeighbors(tree, tree.shape, pointLst, 1, null); }
 
 var points = [{x : 10, y : 20, z : 3}, {x : -50, y : 35, z : -7}, {x : -24, y : 57, z : 20}, {x : -15, y : 8, z : 17}, {x : 9, y : 9, z : 9}], kdtree1 = constructKDtree(points, points.length, 0, 1);
