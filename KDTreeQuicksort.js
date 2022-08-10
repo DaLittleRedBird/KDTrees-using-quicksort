@@ -148,6 +148,7 @@ function searchNearNeighbors(tree, point, axis, nearestNghbor) {
 	diff = (axis == 1) ? point.x - tree.shape.x : (axis == 2) ? point.y - tree.shape.y : point.z - tree.shape.z;
 	close = diff <= 0 ? tree.left : tree.right; away = diff <= 0 ? tree.right : tree.left;
 	
+	//TODO : force the z-axis to 'lean left.' (Force it in such away so that the nearer neighbor is allways chosen when we hit the z-axis.)
 	best = searchNearNeighbors(close, point, (axis + 1) % 3 + 1, best);
 	if (diff * diff < bestDist) { best = searchNearNeighbors(away, point, (axis + 1) % 3 + 1, best); }
 	return best;
